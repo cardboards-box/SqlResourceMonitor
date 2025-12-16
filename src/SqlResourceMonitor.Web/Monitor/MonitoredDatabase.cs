@@ -29,6 +29,8 @@ public interface IMonitoredDatabase
 	/// The amount of allocated tempDB space
 	/// </summary>
 	TempDbSpace Space { get; }
+
+	ProcessMonitor[] Monitor { get; }
 }
 
 /// <summary>
@@ -40,6 +42,8 @@ public class MonitoredDatabase(
 	string _name) : Refreshable(_logger, _name), IMonitoredDatabase
 {
 	public TempDbSpace Space { get; private set; } = new();
+
+	public ProcessMonitor[] Monitor { get; private set; } = [];
 
 	/// <summary>
 	/// Used for refreshing the databse resources.
@@ -60,9 +64,15 @@ public class MonitoredDatabase(
 		await con.OpenAsync(token);
 
 		//Get the tempdb space usage
-		Space = await con.QueryFirstOrDefaultAsync<TempDbSpace>(TempDbSpace.QUERY) ?? new();
-        
+		//Space = await con.QueryFirstOrDefaultAsync<TempDbSpace>(TempDbSpace.QUERY) ?? new();
+		//Monitor = (await con.QueryAsync<ProcessMonitor>(ProcessMonitor.QUERY)).ToArray();
 
+		var query = TempDbSpace.QUERY + ProcessMonitor.QUERY;
+		using var reader = await con.QueryMultipleAsync(query);
+
+		Space = await reader.ReadFirstOrDefaultAsync<TempDbSpace>() ?? new();
+		Monitor = (await reader.ReadAsync<ProcessMonitor>()).ToArray();
+        
         return true;
 	}
 }

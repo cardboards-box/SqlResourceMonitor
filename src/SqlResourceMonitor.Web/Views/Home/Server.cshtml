@@ -20,7 +20,7 @@ else
     <div>
         <ul>
             <li>Last Refreshed: @Model.LastRefresh.ToString("yyyy-MM-dd HH:mm:ss zzz")</li>
-            <li>State: @(Model.Refreshing ? "Refreshing..." : "Refresh!")</li>
+            <li>State: @(Model.Refreshing ? "Refreshing..." : "Refreshed!")</li>
             <li>
                 <b>Temp DB Space:</b>
                 <ul>
@@ -29,6 +29,15 @@ else
                     <li>InternalObjects: @Model.Space.InternalObjects.ToString("0.00") MB</li>
                     <li>VersionStore: @Model.Space.VersionStore.ToString("0.00") MB</li>
                     <li>TotalAllocated: @Model.Space.TotalAllocated.ToString("0.00") MB</li>
+                </ul>
+            </li>
+            <li>
+                <b>Process Monitor:</b>
+                <ul>
+                    @foreach(var monitor in Model.Monitor)
+                    {
+                        <li>@monitor.Username is running &quot;@monitor.Query&quot; since @monitor.StartTime.ToString("yyyy-MM-dd HH:mm:ss zzz")</li>
+                    }
                 </ul>
             </li>
         </ul>

@@ -20,6 +20,13 @@ public class HomeController(IDatabaseDataService _dbs) : Controller
         return View(database);
 	}
 
+    public IActionResult JsonData(string id)
+    {
+        var database = _dbs.GetByName(id);
+        var tempDbSpace = database?.Space;
+        return Json(tempDbSpace);
+	}
+
     public IActionResult Privacy()
     {
         return View();
