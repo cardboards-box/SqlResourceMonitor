@@ -1,0 +1,44 @@
+﻿@using SqlResourceMonitor.Web.Monitor;
+@model IMonitoredDatabase?;
+@{
+    ViewData["Title"] = Model is null ? "Not Found!" : Model.Name;
+}
+
+
+@if(Model is null)
+{
+    <div class="text-center">
+        <h1 class="display-4">Database Resource Monitor</h1>
+        <p>The database could not be found!</p>
+    </div>
+}
+else
+{
+    <div class="text-center">
+        <h1 class="display-4">Database Resource Monitor: @Model.Name</h1>
+    </div>
+    <div>
+        <ul>
+            <li>Last Refreshed: @Model.LastRefresh.ToString("yyyy-MM-dd HH:mm:ss zzz")</li>
+            <li>State: @(Model.Refreshing ? "Refreshing..." : "Refresh!")</li>
+            <li>
+                <b>Temp DB Space:</b>
+                <ul>
+                    <li>Free: @Model.Space.Free.ToString("0.00") MB</li>
+                    <li>UserObjects: @Model.Space.UserObjects.ToString("0.00") MB</li>
+                    <li>InternalObjects: @Model.Space.InternalObjects.ToString("0.00") MB</li>
+                    <li>VersionStore: @Model.Space.VersionStore.ToString("0.00") MB</li>
+                    <li>TotalAllocated: @Model.Space.TotalAllocated.ToString("0.00") MB</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        setTimeout(() => {
+            window.location.reload();
+        }, 30 * 1000);    
+    </script>
+}

@@ -1,0 +1,34 @@
+﻿@using SqlResourceMonitor.Web.Monitor;
+@model IMonitoredDatabase[];
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Database Resource Monitor</h1>
+    <p>A proof of concept / example application for refreshing queries in the background of an asp.net core web-api project</p>
+    <p>Click one of the database's below to see their resources!</p>
+</div>
+
+@if(Model is not null && Model.Length > 0)
+{
+    <ul>
+        @foreach(var db in Model)
+        {
+            <li>
+                <a asp-controller="Home"
+                   asp-action="Server"
+                   asp-route-id="@db.Name">
+                   @db.Name - Last Update: @db.LastRefresh.ToString("yyyy-MM-dd HH:mm:ss zzz")
+                </a>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <div class="text-center">
+		<h2>No databases found</h2>
+    </div>
+}
